@@ -11,7 +11,10 @@ import SwiftUI
 struct CombinedWeatheriOS_MacOSAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CurrentWeatherView()
         }
+        #if os(macOS)
+        .defaultSize(width: 1000, height: 650)
+        #endif
     }
 }
