@@ -12,7 +12,7 @@ import MapKit
 struct CurrentWeatherView: View {
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 19.4326, longitude: -99.1332),
-        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
     )
     
     var body: some View {
@@ -20,29 +20,61 @@ struct CurrentWeatherView: View {
             Color.black.ignoresSafeArea(edges: .all)
             
             VStack {
+                
+                locationDescription
+                    .padding(.top, 42)
+                
+                Spacer()
+                
+                VStack {
+                    Map(coordinateRegion: $region)
+                        //.cornerRadius(25)
+                        .frame(height: 300)
+                        .disabled(true)
+                    
+                    HStack {
+                        CurrentWeatherRowView()
+                        CurrentWeatherRowView()
+                        CurrentWeatherRowView()
+                        CurrentWeatherRowView()
+                        CurrentWeatherRowView()
+                    }
+                 
+
+                }
+                
+                
+              
+            }
+            .padding()
+        }
+    }
+    
+    var locationDescription: some View {
+        HStack {
+            VStack(alignment: .leading) {
                 Text("Tecomatlan")
                     .foregroundStyle(.white)
+                    .font(.title)
+                    .bold()
                 
-                HStack {
-                    Text("23°C")
-                        .font(.title)
-                        .foregroundStyle(.white)
-                    
-                    Image(systemName: "sun.max.fill")
-                        .foregroundStyle(.yellow)
-                        .font(.system(size: 60))
-                }
+                Text("23°C")
+                    .font(.title)
+                    .foregroundStyle(.white)
                 
                 Text("Nublado")
                     .foregroundStyle(.white)
-                
-                Map(coordinateRegion: $region)
-                    .frame(height: 300)
-                    .cornerRadius(10)
-                
-                CurrentWeatherRowView()
             }
-            .padding()
+            
+            Spacer()
+            HStack {
+                
+                Image(systemName: "sun.max.fill")
+                    .foregroundStyle(.yellow)
+                    .font(.system(size: 100))
+            }
+         
+      
         }
     }
 }
@@ -53,8 +85,27 @@ struct CurrentWeatherView: View {
 
 struct CurrentWeatherRowView: View {
     var body: some View {
-        Text("CurrentWeatherRowView")
-            .foregroundStyle(.white)
+        VStack(spacing: 12) {
+            
+            HStack {
+                Text("1:00 pm")
+                    .foregroundStyle(.white)
+            }
+            
+            HStack {
+                Image(systemName: "sun.max.fill")
+                    .foregroundStyle(.yellow)
+
+            }
+            
+            HStack {
+                Text("23°C")
+                    .foregroundStyle(.white)
+
+            }
+        }
+        .background(.brown)
+        .frame(maxWidth: 100)
 
     }
 }
