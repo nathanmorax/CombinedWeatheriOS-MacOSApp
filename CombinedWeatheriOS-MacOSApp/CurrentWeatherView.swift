@@ -50,19 +50,29 @@ struct CurrentWeatherView: View {
         }
     }
     
+    init() {
+        for familyName in UIFont.familyNames {
+            print(familyName)
+            for fontName in UIFont.fontNames(forFamilyName: familyName) {
+                print("\t\(fontName)")
+            }
+        }
+    }
+    
     var locationDescription: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Tecomatlan")
                     .foregroundStyle(.white)
-                    .font(.title)
-                    .bold()
+                    .font(.custom("PixelOperator-Bold", size: 42))
+                    //.bold()
                 
                 Text("23°C")
-                    .font(.title)
+                    .font(.custom("PixelOperator", size: 42))
                     .foregroundStyle(.white)
                 
                 Text("Nublado")
+                    .font(.custom("PixelOperator", size: 42))
                     .foregroundStyle(.white)
             }
             
