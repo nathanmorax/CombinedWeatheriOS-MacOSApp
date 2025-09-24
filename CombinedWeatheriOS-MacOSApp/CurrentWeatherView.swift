@@ -63,17 +63,15 @@ struct CurrentWeatherView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Tecomatlan")
-                    .foregroundStyle(.white)
-                    .font(.custom("PixelOperator-Bold", size: 42))
-                    //.bold()
+                    .pixelFont(size: 42, bold: true)
                 
                 Text("23°C")
-                    .font(.custom("PixelOperator", size: 42))
-                    .foregroundStyle(.white)
-                
+                    .pixelFont(size: 32)
+
+            
                 Text("Nublado")
-                    .font(.custom("PixelOperator", size: 42))
-                    .foregroundStyle(.white)
+                    .pixelFont(size: 30, bold: true)
+
             }
             
             Spacer()
