@@ -113,3 +113,30 @@ struct HourlyWeatherResponse: Codable {
     let list: [ForecastItem]
     let city: City
 }
+
+struct WeatherData {
+    let temperature: Double
+    let feelsLike: Double
+    let humidity: Int
+    let description: String
+    let iconCode: String
+    let windSpeed: Double
+    let pressure: Int
+    let location: String
+}
+
+struct ForecastData {
+    let items: [ForecastItemData]
+    let city: String
+    let country: String
+}
+
+struct ForecastItemData {
+    let dateTime: Date
+    let temperature: Double
+    let description: String
+    let iconCode: String
+    let precipitationProbability: Double
+    let windSpeed: Double
+    let isDay: Bool
+}

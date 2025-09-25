@@ -18,10 +18,10 @@ struct CurrentWeatherView: View {
     
     
     init() {
-           let locationManager = LocationManager()
-           _locationManager = StateObject(wrappedValue: locationManager)
-           _vm = StateObject(wrappedValue: CurrentWeatherViewModel(weatherFetcher: WeatherFetcher(), locationManager: locationManager))
-       }
+        let locationManager = LocationManager()
+        _locationManager = StateObject(wrappedValue: locationManager)
+        _vm = StateObject(wrappedValue: CurrentWeatherViewModel(weatherFetcher: WeatherFetcher(), locationManager: locationManager))
+    }
     
     
     var body: some View {
@@ -37,26 +37,38 @@ struct CurrentWeatherView: View {
                 
                 Spacer()
                 
-                VStack {
-                    HStack {
-                        CurrentWeatherRowView()
-                        CurrentWeatherRowView()
-                        CurrentWeatherRowView()
-                        CurrentWeatherRowView()
-                        CurrentWeatherRowView()
+                
+                if !vm.dataSourceHourly.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(vm.dataSourceHourly, id: \.dt) { item in
+                                HStack {
+                                    Text(item.dt_txt)
+                                        .foregroundColor(.white)
+                                        .font(.subheadline)
+                                    
+                                    Spacer()
+                                    
+                                    Text("\(item.main.temp, specifier: "%.1f")°C")
+                                        .foregroundColor(.cyan)
+                                        .bold()
+                                }
+                                .padding()
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                            }
+                        }
+                        .padding(.top, 8)
                     }
-                    
-                    
                 }
-                
-                
-                
+
             }
             .padding()
         }
         .onReceive(locationManager.$location.compactMap { $0 }) { coordinate in
             print("Nueva ubicación: \(coordinate.latitude), \(coordinate.longitude)")
             vm.refresh(lat: coordinate.latitude, lon: coordinate.longitude)
+            vm.hourlyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
         }
         
     }

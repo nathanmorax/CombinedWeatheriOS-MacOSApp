@@ -10,8 +10,11 @@ import CoreLocation
 
 class CurrentWeatherViewModel: ObservableObject {
     @Published var dataSource: CurrentWeatherResponse?
+    @Published var dataSourceHourly: [ForecastItem] = []
+
     
     private let weatherFetcher: WeatherFetcher
+
     private var disposables = Set<AnyCancellable>()
     
     init(weatherFetcher: WeatherFetcher, locationManager: LocationManager) {
@@ -42,11 +45,34 @@ class CurrentWeatherViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] weather in
                 self?.dataSource = weather
+                print(weather)
             })
             .store(in: &disposables)
         
         print(lat)
         print(lon)
         
+    }
+    
+    func hourlyWeather(lat: Double, lon: Double) {
+        weatherFetcher
+            .hourlyWeatherLocation(forLat: lat, forLong: lon)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
+                switch completion {
+                case .failure(let error):
+                    print(error)
+                    self.dataSourceHourly = []
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] hourlyWeather in
+                self?.dataSourceHourly = hourlyWeather.list
+                print(hourlyWeather)
+
+            })
+            .store(in: &disposables)
+
     }
 }
