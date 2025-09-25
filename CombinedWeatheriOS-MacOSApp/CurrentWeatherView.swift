@@ -7,13 +7,12 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
 
 struct CurrentWeatherView: View {
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 19.4326, longitude: -99.1332),
-        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-    )
+    
+    @ObservedObject var vm = CurrentWeatherViewModel(weatherFetcher: WeatherFetcher(), lat: 19.381962, lon: -99.181042)
     
     var body: some View {
         ZStack {
@@ -21,17 +20,18 @@ struct CurrentWeatherView: View {
             
             VStack {
                 
-                locationDescription
-                    .padding(.top, 42)
+                if let data = vm.dataSource {
+                    locationDescription(weather: data)
+                        .padding(.top, 42)
+                } else {
+                    ProgressView("Cargando clima...")
+                        .foregroundColor(.white)
+                        .padding(.top, 42)
+                }
                 
                 Spacer()
                 
                 VStack {
-                    Map(coordinateRegion: $region)
-                        //.cornerRadius(25)
-                        .frame(height: 300)
-                        .disabled(true)
-                    
                     HStack {
                         CurrentWeatherRowView()
                         CurrentWeatherRowView()
@@ -39,50 +39,42 @@ struct CurrentWeatherView: View {
                         CurrentWeatherRowView()
                         CurrentWeatherRowView()
                     }
-                 
-
+                    
+                    
                 }
                 
                 
-              
+                
             }
             .padding()
         }
-    }
-    
-    init() {
-        for familyName in UIFont.familyNames {
-            print(familyName)
-            for fontName in UIFont.fontNames(forFamilyName: familyName) {
-                print("\t\(fontName)")
-            }
+        .onAppear {
+            vm.refresh()
         }
     }
     
-    var locationDescription: some View {
+    @ViewBuilder
+    func locationDescription(weather: CurrentWeatherResponse) -> some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("Tecomatlan")
-                    .pixelFont(size: 42, bold: true)
+                Text(weather.name)
+                    .pixelFont(size: 36, bold: true)
                 
-                Text("23°C")
-                    .pixelFont(size: 32)
-
-            
-                Text("Nublado")
+                Text("\(Int(weather.main.temp))°C")
+                 .pixelFont(size: 32)
+                
+                Text(weather.weather.first?.description.capitalized ?? "Desconocido")
                     .pixelFont(size: 30, bold: true)
-
+                    .padding(12)
+                    .background(.cyan)
             }
             
             Spacer()
-            HStack {
-                
-                Image(systemName: "sun.max.fill")
-                    .foregroundStyle(.yellow)
-                    .font(.system(size: 100))
-            }
-         
-      
+            
+            Image("Sun")
+                .resizable()
+                .interpolation(.none)
+                .frame(width: 180, height: 180)
         }
     }
 }
@@ -103,17 +95,18 @@ struct CurrentWeatherRowView: View {
             HStack {
                 Image(systemName: "sun.max.fill")
                     .foregroundStyle(.yellow)
-
+                
             }
             
             HStack {
                 Text("23°C")
                     .foregroundStyle(.white)
-
+                
             }
         }
         .background(.brown)
         .frame(maxWidth: 100)
-
+        
     }
 }
+
