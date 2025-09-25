@@ -28,9 +28,13 @@ class WeatherFetcher {
 }
 
 extension WeatherFetcher: WeatherFetchable {
-  
+    
     func currentWeatherLocation(forLat lat: Double, forLong lon: Double) -> AnyPublisher<CurrentWeatherResponse, WeatherError> {
         return weatherFecth(with: makeCurrentLocationComponents(withLat: lat, withLon: lon))
+    }
+    
+    func hourlyWeatherLocation(forLat lat: Double, forLong lon: Double) -> AnyPublisher<HourlyWeatherResponse, WeatherError> {
+        return weatherFecth(with: makeHourlyLocationComponents(withLat: lat, withLon: lon))
     }
     
     private func weatherFecth<T>(with components: URLComponents) -> AnyPublisher<T, WeatherError> where T: Decodable {
@@ -56,6 +60,7 @@ private extension WeatherFetcher {
         static let schema = "https"
         static let host = "api.openweathermap.org"
         static let path = "/data/2.5/weather"
+        static let pathHourly = "/data/2.5/forecast"
         static let key = "1011a0bb76d2ef4fd22aed0724b594c6"
     }
     
@@ -71,6 +76,23 @@ private extension WeatherFetcher {
             URLQueryItem(name: "appid", value: OpenWeatherAPI.key),
             URLQueryItem(name: "units", value: "metric"), // opcional: para °C
             URLQueryItem(name: "lang", value: "es")       // opcional: idioma en español
+        ]
+        
+        return components
+    }
+    
+    private func makeHourlyLocationComponents(withLat lat: Double, withLon lon: Double) -> URLComponents {
+        var components = URLComponents()
+        components.scheme = OpenWeatherAPI.schema
+        components.host = OpenWeatherAPI.host
+        components.path = OpenWeatherAPI.pathHourly
+        
+        components.queryItems = [
+            URLQueryItem(name: "lat", value: String(lat)),
+            URLQueryItem(name: "lon", value: String(lon)),
+            URLQueryItem(name: "appid", value: OpenWeatherAPI.key),
+            URLQueryItem(name: "units", value: "metric"), // opcional: para °C
+            URLQueryItem(name: "lang", value: "es")
         ]
         
         return components
