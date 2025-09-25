@@ -6,23 +6,27 @@
 //
 import Combine
 import Foundation
+import CoreLocation
 
 class CurrentWeatherViewModel: ObservableObject {
     @Published var dataSource: CurrentWeatherResponse?
     
-    let lat: Double
-    let lon: Double
-    
     private let weatherFetcher: WeatherFetcher
     private var disposables = Set<AnyCancellable>()
     
-    init(weatherFetcher: WeatherFetcher, lat: Double, lon: Double) {
-        self.lat = lat
-        self.lon = lon
+    init(weatherFetcher: WeatherFetcher, locationManager: LocationManager) {
         self.weatherFetcher = weatherFetcher
+        
+        
+        locationManager.$location
+            .compactMap { $0 }
+            .sink { [weak self] coordinate in
+                self?.weatherFetcher.currentWeatherLocation(forLat: coordinate.latitude, forLong: coordinate.longitude)
+            }
+            .store(in: &disposables)
     }
     
-    func refresh() {
+    func refresh(lat: Double, lon: Double) {
         weatherFetcher
             .currentWeatherLocation(forLat: lat, forLong: lon)
             .receive(on: DispatchQueue.main)
@@ -40,5 +44,9 @@ class CurrentWeatherViewModel: ObservableObject {
                 self?.dataSource = weather
             })
             .store(in: &disposables)
+        
+        print(lat)
+        print(lon)
+        
     }
 }

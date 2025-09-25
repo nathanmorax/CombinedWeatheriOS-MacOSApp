@@ -8,11 +8,21 @@
 import SwiftUI
 import MapKit
 import Combine
+import CoreLocationUI
 
 
 struct CurrentWeatherView: View {
     
-    @ObservedObject var vm = CurrentWeatherViewModel(weatherFetcher: WeatherFetcher(), lat: 19.381962, lon: -99.181042)
+    @StateObject var vm: CurrentWeatherViewModel
+    @StateObject var locationManager = LocationManager()
+    
+    
+    init() {
+           let locationManager = LocationManager()
+           _locationManager = StateObject(wrappedValue: locationManager)
+           _vm = StateObject(wrappedValue: CurrentWeatherViewModel(weatherFetcher: WeatherFetcher(), locationManager: locationManager))
+       }
+    
     
     var body: some View {
         ZStack {
@@ -22,10 +32,6 @@ struct CurrentWeatherView: View {
                 
                 if let data = vm.dataSource {
                     locationDescription(weather: data)
-                        .padding(.top, 42)
-                } else {
-                    ProgressView("Cargando clima...")
-                        .foregroundColor(.white)
                         .padding(.top, 42)
                 }
                 
@@ -48,9 +54,11 @@ struct CurrentWeatherView: View {
             }
             .padding()
         }
-        .onAppear {
-            vm.refresh()
+        .onReceive(locationManager.$location.compactMap { $0 }) { coordinate in
+            print("Nueva ubicación: \(coordinate.latitude), \(coordinate.longitude)")
+            vm.refresh(lat: coordinate.latitude, lon: coordinate.longitude)
         }
+        
     }
     
     @ViewBuilder
@@ -61,7 +69,7 @@ struct CurrentWeatherView: View {
                     .pixelFont(size: 36, bold: true)
                 
                 Text("\(Int(weather.main.temp))°C")
-                 .pixelFont(size: 32)
+                    .pixelFont(size: 32)
                 
                 Text(weather.weather.first?.description.capitalized ?? "Desconocido")
                     .pixelFont(size: 30, bold: true)
