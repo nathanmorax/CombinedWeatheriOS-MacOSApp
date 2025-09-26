@@ -8,8 +8,10 @@
 import SwiftUI
 import MapKit
 import Combine
+import CoreLocation
+#if os(iOS)
 import CoreLocationUI
-
+#endif
 
 struct CurrentWeatherView: View {
     

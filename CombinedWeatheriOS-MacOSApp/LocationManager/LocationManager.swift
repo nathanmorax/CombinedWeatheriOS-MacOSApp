@@ -6,7 +6,9 @@
 //
 
 import CoreLocation
+#if os(iOS)
 import CoreLocationUI
+#endif
 import Combine
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
@@ -46,10 +48,17 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        authorizationStatus = manager.authorizationStatus
-        if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {
+        #if os(iOS)
+        let status = manager.authorizationStatus
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
             manager.requestLocation()
         }
+        #elseif os(macOS)
+        let status = manager.authorizationStatus
+        if status == .authorizedAlways {
+            manager.requestLocation()
+        }
+        #endif
     }
 }
 
