@@ -11,10 +11,10 @@ import CoreLocation
 class CurrentWeatherViewModel: ObservableObject {
     @Published var dataSource: CurrentWeatherResponse?
     @Published var dataSourceHourly: [ForecastItem] = []
-
+    
     
     private let weatherFetcher: WeatherFetcher
-
+    
     private var disposables = Set<AnyCancellable>()
     
     init(weatherFetcher: WeatherFetcher, locationManager: LocationManager) {
@@ -68,12 +68,25 @@ class CurrentWeatherViewModel: ObservableObject {
                     break
                 }
             }, receiveValue: { [weak self] hourlyWeather in
-                self?.dataSourceHourly = hourlyWeather.list
-                print(hourlyWeather)
-
+                
+                let now = Date()
+                let filtered = hourlyWeather.list.filter { item in
+                    guard let utcDate = apiFormatter.date(from: item.dt_txt) else { return false }
+                    // Convertimos a tu zona local
+                    let localDate = Calendar.current.date(
+                        byAdding: .second,
+                        value: TimeZone.current.secondsFromGMT(for: utcDate),
+                        to: utcDate
+                    )!
+                    return Calendar.current.isDate(localDate, inSameDayAs: now)
+                }
+                self?.dataSourceHourly = filtered
+                print("Clima hoy: \(filtered)")
+                
+                
             })
             .store(in: &disposables)
-
+        
     }
 }
 
