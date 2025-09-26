@@ -8,7 +8,6 @@
 import Foundation
 
 // MARK: - Shared Base Models
-// Estas estructuras son compartidas entre ambos endpoints
 struct Coord: Codable {
     let lon: Double
     let lat: Double
@@ -31,7 +30,6 @@ struct Main: Codable {
     let sea_level: Int?
     let grnd_level: Int?
     
-    // Propiedades específicas del forecast (opcionales para current weather)
     let temp_kf: Double?
 }
 
@@ -64,14 +62,15 @@ struct ForecastItem: Codable {
     let clouds: Clouds
     let wind: Wind
     let visibility: Int
-    let pop: Double // Probability of precipitation
+    let pop: Double
     let rain: Rain?
     let sys: ForecastSys
     let dt_txt: String
+
 }
 
 struct Rain: Codable {
-    let threeH: Double // 3 hour rainfall
+    let threeH: Double
     
     private enum CodingKeys: String, CodingKey {
         case threeH = "3h"

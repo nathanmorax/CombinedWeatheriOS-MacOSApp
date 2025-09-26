@@ -41,25 +41,12 @@ struct CurrentWeatherView: View {
                 if !vm.dataSourceHourly.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(vm.dataSourceHourly, id: \.dt) { item in
-                                HStack {
-                                    Text(item.dt_txt)
-                                        .foregroundColor(.white)
-                                        .font(.subheadline)
-                                    
-                                    Spacer()
-                                    
-                                    Text("\(item.main.temp, specifier: "%.1f")°C")
-                                        .foregroundColor(.cyan)
-                                        .bold()
-                                }
-                                .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(10)
+                            ForEach(vm.dataSourceHourly.map { CurrentWeatherRowViewModel(item: $0) }) { itemVM in
+                                CurrentWeatherRow(viewModel: itemVM)
                             }
                         }
-                        .padding(.top, 8)
                     }
+
                 }
 
             }
@@ -97,36 +84,9 @@ struct CurrentWeatherView: View {
                 .frame(width: 180, height: 180)
         }
     }
+    
 }
 
 #Preview {
     CurrentWeatherView()
 }
-
-struct CurrentWeatherRowView: View {
-    var body: some View {
-        VStack(spacing: 12) {
-            
-            HStack {
-                Text("1:00 pm")
-                    .foregroundStyle(.white)
-            }
-            
-            HStack {
-                Image(systemName: "sun.max.fill")
-                    .foregroundStyle(.yellow)
-                
-            }
-            
-            HStack {
-                Text("23°C")
-                    .foregroundStyle(.white)
-                
-            }
-        }
-        .background(.brown)
-        .frame(maxWidth: 100)
-        
-    }
-}
-
