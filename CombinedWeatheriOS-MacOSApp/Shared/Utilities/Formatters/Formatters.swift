@@ -10,12 +10,17 @@ let apiFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone.current
     return formatter
 }()
 
 let hourFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "HH:mm"
+    formatter.dateFormat = "h a"    // 12h con AM/PM
+    formatter.amSymbol = "AM"
+    formatter.pmSymbol = "PM"
+    formatter.timeZone = TimeZone.current // Muestra hora local correctamente
     return formatter
 }()
+
+

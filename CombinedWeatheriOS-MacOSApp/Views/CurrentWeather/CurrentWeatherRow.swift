@@ -18,18 +18,17 @@ struct CurrentWeatherRow: View {
     var body: some View {
         HStack {
             Text(viewModel.hour)
-                    .foregroundColor(.white)
-                    .font(.subheadline)
-
+                .pixelFont(size: 18)
+                .foregroundColor(.white)
+            
             Spacer()
-
+            
             Text("\(viewModel.temperature)°")
-                .foregroundColor(.cyan)
-                .bold()
+                .pixelFont(size: 18, bold: true)
         }
         .padding()
         .background(Color.gray.opacity(0.2))
         .cornerRadius(10)
     }
-
+    
 }

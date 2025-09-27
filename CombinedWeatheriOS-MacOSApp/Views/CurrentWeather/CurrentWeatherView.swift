@@ -40,6 +40,8 @@ struct CurrentWeatherView: View {
                 Spacer()
                 
                 
+                
+                
                 if !vm.dataSourceHourly.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
@@ -59,6 +61,8 @@ struct CurrentWeatherView: View {
             vm.refresh(lat: coordinate.latitude, lon: coordinate.longitude)
             vm.hourlyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
         }
+        
+        
         
     }
     
@@ -86,6 +90,8 @@ struct CurrentWeatherView: View {
                 .frame(width: 180, height: 180)
         }
     }
+    
+    
     
 }
 

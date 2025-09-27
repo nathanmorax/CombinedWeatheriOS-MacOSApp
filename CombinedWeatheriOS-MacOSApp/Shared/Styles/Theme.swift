@@ -3,8 +3,11 @@
 //  CombinedWeatheriOS-MacOSApp
 //
 //  Created by Jonathan Mora on 23/09/25.
-//
+
 import SwiftUI
+#if os(macOS)
+import AppKit
+#endif
 
 struct AppColors {
     static let primary = Color.teal
@@ -13,12 +16,18 @@ struct AppColors {
 
 struct AppFonts {
     static func pixel(size: CGFloat, bold: Bool = false) -> Font {
-        .custom(bold ? "PixelOperator-Bold" : "PixelOperator", size: size)
+        let fontName = bold ? "PixelOperator-Bold" : "PixelOperator"
+        
+        #if os(macOS)
+        if NSFont(name: fontName, size: size) != nil {
+            return .custom(fontName, size: size)
+        } else {
+            print("⚠️ Fuente '\(fontName)' no disponible en macOS, usando sistema")
+            return .system(size: size, weight: bold ? .bold : .regular, design: .monospaced)
+        }
+        #else
+        return .custom(fontName, size: size)
+        #endif
     }
 }
 
-struct AppSpacing {
-    static let small: CGFloat = 8
-    static let medium: CGFloat = 16
-    static let large: CGFloat = 24
-}

@@ -69,19 +69,9 @@ class CurrentWeatherViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] hourlyWeather in
                 
-                let now = Date()
-                let filtered = hourlyWeather.list.filter { item in
-                    guard let utcDate = apiFormatter.date(from: item.dt_txt) else { return false }
-                    // Convertimos a tu zona local
-                    let localDate = Calendar.current.date(
-                        byAdding: .second,
-                        value: TimeZone.current.secondsFromGMT(for: utcDate),
-                        to: utcDate
-                    )!
-                    return Calendar.current.isDate(localDate, inSameDayAs: now)
-                }
-                self?.dataSourceHourly = filtered
-                print("Clima hoy: \(filtered)")
+                self?.dataSourceHourly = hourlyWeather.list.filteredForToday()
+
+                print("Clima hoy: \(self?.dataSourceHourly)")
                 
                 
             })
@@ -90,6 +80,25 @@ class CurrentWeatherViewModel: ObservableObject {
     }
 }
 
+extension Array where Element == ForecastItem {
+    func filteredForToday() -> [ForecastItem] {
+        let now = Date()
+        let calendar = Calendar.current
+        
+        return self.filter { item in
+            guard let localDate = item.dateLocal else { return false }
+            return calendar.isDate(localDate, inSameDayAs: now)
+        }
+    }
+}
 
+extension ForecastItem {
+    var dateLocal: Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0) // UTC
+        return formatter.date(from: dt_txt) // Date ya representa el instante correcto
+    }
+}
 
 
