@@ -46,8 +46,5 @@ class CurrentWeatherViewModel: ObservableObject {
             })
             .store(in: &disposables)
         
-        print(lat)
-        print(lon)
-        
     }
 }

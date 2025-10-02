@@ -19,7 +19,7 @@ struct DailyWeatherRowViewModel: Identifiable {
     
     var day: String {
         if let date = dayOnlyFormatter.date(from: dailyItem.date) {
-            return dayOfWeekFormatter.string(from: date)
+            return dayOfWeekFormatter.string(from: date).capitalizingFirstLetter
         }
         return dailyItem.date
     }

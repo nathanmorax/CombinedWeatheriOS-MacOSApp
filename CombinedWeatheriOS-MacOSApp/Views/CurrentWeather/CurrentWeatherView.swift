@@ -98,21 +98,6 @@ struct CurrentWeatherView: View {
         }
     }
     
-    
-    private func formatHour(_ timeString: String) -> String {
-        let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "HH:mm"
-        
-        if let date = inputFormatter.date(from: timeString) {
-            return outputFormatter.string(from: date)
-        }
-        return timeString
-    }
-    
-    
 }
 
 #Preview {
