@@ -67,19 +67,19 @@ struct CurrentWeatherView: View {
     }
     
     @ViewBuilder
-    func locationDescription(weather: CurrentWeatherResponse) -> some View {
+    func locationDescription(weather: WeatherResponse) -> some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(weather.name)
+                Text(weather.location.name)
                     .pixelFont(size: 36, bold: true)
                 
-                Text("\(Int(weather.main.temp))°C")
+                Text("\(Int(weather.current.temp_c))°C")
                     .pixelFont(size: 32)
                 
-                Text(weather.weather.first?.description.capitalized ?? "Desconocido")
+                /*Text(weather.weather.first?.description.capitalized ?? "Desconocido")
                     .pixelFont(size: 30, bold: true)
                     .padding(12)
-                    .background(.cyan)
+                    .background(.cyan)*/
             }
             
             Spacer()

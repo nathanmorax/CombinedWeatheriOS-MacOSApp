@@ -9,7 +9,7 @@ import Foundation
 import CoreLocation
 
 class CurrentWeatherViewModel: ObservableObject {
-    @Published var dataSource: CurrentWeatherResponse?
+    @Published var dataSource: WeatherResponse?
     @Published var dataSourceHourly: [ForecastItem] = []
     
     
@@ -70,13 +70,29 @@ class CurrentWeatherViewModel: ObservableObject {
             }, receiveValue: { [weak self] hourlyWeather in
                 
                 self?.dataSourceHourly = hourlyWeather.list.filteredForToday()
-
+                
                 print("Clima hoy: \(self?.dataSourceHourly)")
                 
                 
             })
             .store(in: &disposables)
         
+    }
+}
+
+extension CurrentWeatherResponse {
+    
+    var temperature: String {
+        return String(format: "%.1f", main.temp)
+    }
+    var maxTemperature: String {
+        return String(format: "%.1f", main.temp_max)
+    }
+    var minTemperature: String {
+        return String(format: "%.1f", main.temp_min)
+    }
+    var weatherDescription: String {
+        weather.first?.description.capitalized ?? "Desconocido"
     }
 }
 
