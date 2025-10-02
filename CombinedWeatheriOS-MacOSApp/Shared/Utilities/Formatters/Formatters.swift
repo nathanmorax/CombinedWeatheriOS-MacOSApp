@@ -16,10 +16,25 @@ let apiFormatter: DateFormatter = {
 
 let hourFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "h a"    // 12h con AM/PM
+    formatter.dateFormat = "h a"
     formatter.amSymbol = "AM"
     formatter.pmSymbol = "PM"
-    formatter.timeZone = TimeZone.current // Muestra hora local correctamente
+    formatter.timeZone = TimeZone.current
+    return formatter
+}()
+
+let dayOfWeekFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "EEEE" // nombre completo del día (ej. Martes)
+    formatter.locale = Locale(identifier: "es_MX") // asegura español
+    formatter.timeZone = TimeZone.current
+    return formatter
+}()
+
+let dayOnlyFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    formatter.timeZone = TimeZone.current
     return formatter
 }()
 
