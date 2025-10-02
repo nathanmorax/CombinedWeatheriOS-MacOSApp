@@ -40,19 +40,18 @@ struct CurrentWeatherView: View {
                 Spacer()
                 
                 
-                
-                
-                if !vm.dataSourceHourly.isEmpty {
+                if let forecastDay = vm.dataSource?.forecast.forecastday.first {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(vm.dataSourceHourly.map { CurrentWeatherRowViewModel(item: $0) }) { itemVM in
+                            ForEach(forecastDay.hour, id: \.time) { hour in
+                                let itemVM = CurrentWeatherRowViewModel(forecast: forecastDay, hour: hour)
                                 CurrentWeatherRow(viewModel: itemVM)
                             }
                         }
                     }
-
                 }
-
+                
+                
             }
             .padding()
         }
@@ -76,10 +75,10 @@ struct CurrentWeatherView: View {
                 Text("\(Int(weather.current.temp_c))°C")
                     .pixelFont(size: 32)
                 
-                /*Text(weather.weather.first?.description.capitalized ?? "Desconocido")
-                    .pixelFont(size: 30, bold: true)
-                    .padding(12)
-                    .background(.cyan)*/
+                Text(weather.current.condition.text ?? "Desconocido")
+                 .pixelFont(size: 30, bold: true)
+                 .padding(12)
+                 .background(.cyan)
             }
             
             Spacer()
@@ -91,6 +90,19 @@ struct CurrentWeatherView: View {
         }
     }
     
+    
+    private func formatHour(_ timeString: String) -> String {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "HH:mm"
+        
+        if let date = inputFormatter.date(from: timeString) {
+            return outputFormatter.string(from: date)
+        }
+        return timeString
+    }
     
     
 }

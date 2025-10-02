@@ -16,12 +16,20 @@ struct CurrentWeatherRow: View {
     }
     
     var body: some View {
-        HStack {
+        VStack {
             Text(viewModel.hour)
                 .pixelFont(size: 18)
                 .foregroundColor(.white)
             
-            Spacer()
+            if let url = viewModel.iconURL {
+                AsyncImage(url: url) { image in
+                    image.resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 30, height: 30)
+            }
             
             Text("\(viewModel.temperature)°")
                 .pixelFont(size: 18, bold: true)

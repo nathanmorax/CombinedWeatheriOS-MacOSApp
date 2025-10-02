@@ -7,26 +7,32 @@
 import SwiftUI
 
 struct CurrentWeatherRowViewModel: Identifiable {
-    private let item: ForecastItem
+    private let forecastItem: ForecastDay
+    private let hourItem: Hour
     
     var id: String {
-        return item.dt_txt
+        return forecastItem.date + "_" + hourItem.time
     }
     
     var hour: String {
-       
-        if let date = apiFormatter.date(from: item.dt_txt) {
+        if let date = apiFormatter.date(from: hourItem.time) {
             return hourFormatter.string(from: date)
         } else {
-            return "–"
+            return hourItem.time
         }
     }
     
     var temperature: String {
-        return String(format: "%.1f", item.main.temp)
+        return String(format: "%.1f", hourItem.temp_c)
     }
     
-    init(item: ForecastItem) {
-        self.item = item
+    var iconURL: URL? {
+        return URL(string: "https:\(hourItem.condition.icon)")
+    }
+    
+    init(forecast: ForecastDay, hour: Hour) {
+        self.forecastItem = forecast
+        self.hourItem = hour
     }
 }
+

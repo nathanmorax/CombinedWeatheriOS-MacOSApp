@@ -30,11 +30,11 @@ class WeatherFetcher {
 extension WeatherFetcher: WeatherFetchable {
     
     func currentWeatherLocation(forLat lat: Double, forLong lon: Double) -> AnyPublisher<WeatherResponse, WeatherError> {
-        return weatherFecth(with: makeForecastComponents(withLat: lat, withLon: lon))
+        return weatherFecth(with: makeCurrentWeather(withLat: lat, withLon: lon))
     }
     
     func hourlyWeatherLocation(forLat lat: Double, forLong lon: Double) -> AnyPublisher<HourlyWeatherResponse, WeatherError> {
-        return weatherFecth(with: makeForecastComponents(withLat: lat, withLon: lon))
+        return weatherFecth(with: makeForecastDay(withLat: lat, withLon: lon))
     }
     
     private func weatherFecth<T>(with components: URLComponents) -> AnyPublisher<T, WeatherError> where T: Decodable {
@@ -63,7 +63,7 @@ private extension WeatherFetcher {
          static let key = "130257e4ed154b0cb9d30427252809"
      }
      
-     private func makeForecastComponents(withLat lat: Double, withLon lon: Double, days: Int = 1) -> URLComponents {
+     private func makeCurrentWeather(withLat lat: Double, withLon lon: Double, days: Int = 1) -> URLComponents {
          var components = URLComponents()
          components.scheme = WeatherAPI.schema
          components.host = WeatherAPI.host
@@ -80,21 +80,21 @@ private extension WeatherFetcher {
          return components
      }
     
-    /*private func makeHourlyLocationComponents(withLat lat: Double, withLon lon: Double) -> URLComponents {
+    private func makeForecastDay(withLat lat: Double, withLon lon: Double, days: Int = 5) -> URLComponents {
         var components = URLComponents()
-        components.scheme = OpenWeatherAPI.schema
-        components.host = OpenWeatherAPI.host
-        components.path = OpenWeatherAPI.pathHourly
+        components.scheme = WeatherAPI.schema
+        components.host = WeatherAPI.host
+        components.path = WeatherAPI.pathForecast
         
         components.queryItems = [
-            URLQueryItem(name: "lat", value: String(lat)),
-            URLQueryItem(name: "lon", value: String(lon)),
-            URLQueryItem(name: "appid", value: OpenWeatherAPI.key),
-            URLQueryItem(name: "units", value: "metric"), // opcional: para °C
-            URLQueryItem(name: "lang", value: "es")
+            URLQueryItem(name: "key", value: WeatherAPI.key),
+            URLQueryItem(name: "q", value: "\(lat),\(lon)"),
+            URLQueryItem(name: "days", value: "\(days)"),
+            URLQueryItem(name: "aqi", value: "no"),
+            URLQueryItem(name: "alerts", value: "no")
         ]
         
         return components
-    }*/
+    }
 }
 

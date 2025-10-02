@@ -8,11 +8,11 @@ import SwiftUI
 
 let apiFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.dateFormat = "yyyy-MM-dd HH:mm"
     formatter.timeZone = TimeZone.current
     return formatter
 }()
+
 
 let hourFormatter: DateFormatter = {
     let formatter = DateFormatter()

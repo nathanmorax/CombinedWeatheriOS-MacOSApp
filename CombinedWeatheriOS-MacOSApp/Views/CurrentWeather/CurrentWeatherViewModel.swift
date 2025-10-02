@@ -10,7 +10,7 @@ import CoreLocation
 
 class CurrentWeatherViewModel: ObservableObject {
     @Published var dataSource: WeatherResponse?
-    @Published var dataSourceHourly: [ForecastItem] = []
+    @Published var dataSourceHourly: [ForecastDay] = []
     
     
     private let weatherFetcher: WeatherFetcher
@@ -69,7 +69,7 @@ class CurrentWeatherViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] hourlyWeather in
                 
-                self?.dataSourceHourly = hourlyWeather.list.filteredForToday()
+                //self?.dataSourceHourly = hourlyWeather.list
                 
                 print("Clima hoy: \(self?.dataSourceHourly)")
                 
@@ -79,42 +79,3 @@ class CurrentWeatherViewModel: ObservableObject {
         
     }
 }
-
-extension CurrentWeatherResponse {
-    
-    var temperature: String {
-        return String(format: "%.1f", main.temp)
-    }
-    var maxTemperature: String {
-        return String(format: "%.1f", main.temp_max)
-    }
-    var minTemperature: String {
-        return String(format: "%.1f", main.temp_min)
-    }
-    var weatherDescription: String {
-        weather.first?.description.capitalized ?? "Desconocido"
-    }
-}
-
-extension Array where Element == ForecastItem {
-    func filteredForToday() -> [ForecastItem] {
-        let now = Date()
-        let calendar = Calendar.current
-        
-        return self.filter { item in
-            guard let localDate = item.dateLocal else { return false }
-            return calendar.isDate(localDate, inSameDayAs: now)
-        }
-    }
-}
-
-extension ForecastItem {
-    var dateLocal: Date? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        formatter.timeZone = TimeZone(secondsFromGMT: 0) // UTC
-        return formatter.date(from: dt_txt) // Date ya representa el instante correcto
-    }
-}
-
-
