@@ -17,6 +17,10 @@ struct CurrentWeatherView: View {
     
     @StateObject var vm: CurrentWeatherViewModel
     @StateObject var locationManager = LocationManager()
+    @StateObject var weeklyVM = WeeklyWeatherViewModel(
+        weatherFetcher: WeatherFetcher(),
+        locationManager: LocationManager()
+    )
     
     
     init() {
@@ -34,10 +38,10 @@ struct CurrentWeatherView: View {
                 
                 if let data = vm.dataSource {
                     locationDescription(weather: data)
-                        .padding(.top, 42)
+                        .padding(.top, 22)
                 }
                 
-                Spacer()
+                Spacer().frame(maxHeight: 44)
                 
                 
                 if let forecastDay = vm.dataSource?.forecast.forecastday.first {
@@ -51,6 +55,8 @@ struct CurrentWeatherView: View {
                     }
                 }
                 
+                WeeklyWeatherView(viewModel: weeklyVM)                
+                
                 
             }
             .padding()
@@ -58,11 +64,7 @@ struct CurrentWeatherView: View {
         .onReceive(locationManager.$location.compactMap { $0 }) { coordinate in
             print("Nueva ubicación: \(coordinate.latitude), \(coordinate.longitude)")
             vm.refresh(lat: coordinate.latitude, lon: coordinate.longitude)
-            vm.hourlyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
         }
-        
-        
-        
     }
     
     @ViewBuilder

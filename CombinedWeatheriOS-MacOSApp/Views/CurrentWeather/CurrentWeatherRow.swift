@@ -35,8 +35,6 @@ struct CurrentWeatherRow: View {
                 .pixelFont(size: 18, bold: true)
         }
         .padding()
-        .background(Color.gray.opacity(0.2))
-        .cornerRadius(10)
     }
     
 }

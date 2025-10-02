@@ -16,6 +16,9 @@ enum WeatherError: Error {
 protocol WeatherFetchable {
     
     func currentWeatherLocation(forLat lat: Double, forLong lon: Double) -> AnyPublisher<WeatherResponse, WeatherError>
+    
+    func weeklyWeather(forLat lat: Double, forLong lon: Double) -> AnyPublisher<WeatherResponse, WeatherError>
+    
 }
 
 class WeatherFetcher {
@@ -30,12 +33,13 @@ class WeatherFetcher {
 extension WeatherFetcher: WeatherFetchable {
     
     func currentWeatherLocation(forLat lat: Double, forLong lon: Double) -> AnyPublisher<WeatherResponse, WeatherError> {
-        return weatherFecth(with: makeCurrentWeather(withLat: lat, withLon: lon))
+        return weatherFecth(with: makeCurrentWeatherComponents(withLat: lat, withLon: lon))
     }
     
-    func hourlyWeatherLocation(forLat lat: Double, forLong lon: Double) -> AnyPublisher<HourlyWeatherResponse, WeatherError> {
-        return weatherFecth(with: makeForecastDay(withLat: lat, withLon: lon))
+    func weeklyWeather(forLat lat: Double, forLong lon: Double) -> AnyPublisher<WeatherResponse, WeatherError> {
+        return weatherFecth(with: makeWeeklyWeatherComponents(withLat: lat, withLon: lon))
     }
+    
     
     private func weatherFecth<T>(with components: URLComponents) -> AnyPublisher<T, WeatherError> where T: Decodable {
         guard let url = components.url else {
@@ -63,7 +67,7 @@ private extension WeatherFetcher {
          static let key = "130257e4ed154b0cb9d30427252809"
      }
      
-     private func makeCurrentWeather(withLat lat: Double, withLon lon: Double, days: Int = 1) -> URLComponents {
+     private func makeCurrentWeatherComponents(withLat lat: Double, withLon lon: Double, days: Int = 1) -> URLComponents {
          var components = URLComponents()
          components.scheme = WeatherAPI.schema
          components.host = WeatherAPI.host
@@ -80,7 +84,7 @@ private extension WeatherFetcher {
          return components
      }
     
-    private func makeForecastDay(withLat lat: Double, withLon lon: Double, days: Int = 5) -> URLComponents {
+    private func makeWeeklyWeatherComponents(withLat lat: Double, withLon lon: Double, days: Int = 5) -> URLComponents {
         var components = URLComponents()
         components.scheme = WeatherAPI.schema
         components.host = WeatherAPI.host
