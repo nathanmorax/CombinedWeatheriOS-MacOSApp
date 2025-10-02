@@ -84,7 +84,7 @@ private extension WeatherFetcher {
          return components
      }
     
-    private func makeWeeklyWeatherComponents(withLat lat: Double, withLon lon: Double, days: Int = 5) -> URLComponents {
+    private func makeWeeklyWeatherComponents(withLat lat: Double, withLon lon: Double, days: Int = 7) -> URLComponents {
         var components = URLComponents()
         components.scheme = WeatherAPI.schema
         components.host = WeatherAPI.host

@@ -55,9 +55,16 @@ struct CurrentWeatherView: View {
                     }
                 }
                 
-                WeeklyWeatherView(viewModel: weeklyVM)                
+                Spacer().frame(maxHeight: 24)
+
                 
-                
+                WeeklyWeatherView(viewModel: weeklyVM)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.cyan)
+                            .shadow(radius: 8)
+                    )
+
             }
             .padding()
         }
@@ -80,7 +87,6 @@ struct CurrentWeatherView: View {
                 Text(weather.current.condition.text ?? "Desconocido")
                  .pixelFont(size: 30, bold: true)
                  .padding(12)
-                 .background(.cyan)
             }
             
             Spacer()

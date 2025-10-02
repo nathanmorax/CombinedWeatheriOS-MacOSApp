@@ -19,84 +19,25 @@ struct WeeklyWeatherView: View {
     
     var body: some View {
         VStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                
-                if viewModel.dataWeekly.isEmpty {
-                    Text("Cargando pronóstico…")
-                } else {
-                    ForEach(viewModel.dataWeekly, id: \.date) { day in
-                        let rowVM = DailyWeatherRowViewModel(dailyItem: day)
-                        DailyWeatherRow(viewModel: rowVM)
-                        Divider()
+            if viewModel.dataWeekly.isEmpty {
+                Text("Cargando pronóstico…")
+                    .padding()
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 12) {
+                        ForEach(viewModel.dataWeekly, id: \.date) { day in
+                            let rowVM = DailyWeatherRowViewModel(dailyItem: day)
+                            DailyWeatherRow(viewModel: rowVM)
+                        }
                     }
-                    
+                    .padding()
                 }
             }
-            .onReceive(locationManager.$location.compactMap { $0 }) { coordinate in
-                print("Nueva ubicación: \(coordinate.latitude), \(coordinate.longitude)")
-                viewModel.fetchWeeklyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-            }
         }
-    }
-}
-
-
-
-
-struct DailyWeatherRow: View {
-    private let viewModel: DailyWeatherRowViewModel
-    
-    init(viewModel: DailyWeatherRowViewModel) {
-        self.viewModel = viewModel
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(viewModel.day)
-                .pixelFont(size: 18)
-            Text("🌡️ Máxima: \(viewModel.temperatureMax)°C / Mínima: \(viewModel.temperatureMin)°C")
-                .pixelFont(size: 18)
-
-            Text("🌧️ Prob. lluvia: \(viewModel.rain)%")
-                .pixelFont(size: 18)
-
+        .onReceive(locationManager.$location.compactMap { $0 }) { coordinate in
+            print("Nueva ubicación: \(coordinate.latitude), \(coordinate.longitude)")
+            viewModel.fetchWeeklyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
         }
-    }
-}
 
-
-struct DailyWeatherRowViewModel: Identifiable {
-    private let dailyItem: ForecastDay
-    
-    var id: String {
-        return dailyItem.date
-    }
-    
-    var day: String {
-        if let date = dayOnlyFormatter.date(from: dailyItem.date) {
-            return dayOfWeekFormatter.string(from: date)
-        }
-        return dailyItem.date
-    }
-    
-    var temperatureMax: String {
-        return String(format: "%.1f", Double(dailyItem.day.maxtemp_c))
-    }
-
-    var temperatureMin: String {
-        return String(format: "%.1f", Double(dailyItem.day.mintemp_c))
-    }
-
-    var rain: String {
-        return String(format: "%.1f", Double(dailyItem.day.daily_chance_of_rain))
-    }
-
-    
-   /* var iconURL: URL? {
-        return URL(string: "https:\(hourItem.condition.icon)")
-    }*/
-    
-    init(dailyItem: ForecastDay) {
-        self.dailyItem = dailyItem
     }
 }
