@@ -35,6 +35,10 @@ struct DailyWeatherRowViewModel: Identifiable {
     var rain: String {
         return String(format: "%.1f", Double(dailyItem.day.daily_chance_of_rain))
     }
+    
+    var iconRain: String {
+        return dailyItem.day.condition.icon
+    }
 
     
    /* var iconURL: URL? {

@@ -9,6 +9,7 @@ import SwiftUI
 let apiFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd HH:mm"
+    formatter.locale = Locale(identifier: "es_MX")
     formatter.timeZone = TimeZone.current
     return formatter
 }()
@@ -25,8 +26,8 @@ let hourFormatter: DateFormatter = {
 
 let dayOfWeekFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "EEEE" // nombre completo del día (ej. Martes)
-    formatter.locale = Locale(identifier: "es_MX") // asegura español
+    formatter.dateFormat = "EEEE"
+    formatter.locale = Locale(identifier: "es_MX")
     formatter.timeZone = TimeZone.current
     return formatter
 }()

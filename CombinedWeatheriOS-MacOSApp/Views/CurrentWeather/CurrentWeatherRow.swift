@@ -21,7 +21,16 @@ struct CurrentWeatherRow: View {
                 .pixelFont(size: 18)
                 .foregroundColor(.white)
             
-            if let url = viewModel.iconURL {
+            if let icon = WeatherIcon(rawValue: viewModel.iconCode) {
+                Image(icon.imageName)
+                    .resizable()
+                    .interpolation(.none)
+                    .frame(width: 30, height: 30)
+            } else {
+                Image("icon_default") // fallback
+            }
+            
+            /*if let url = viewModel.iconURL {
                 AsyncImage(url: url) { image in
                     image.resizable()
                         .scaledToFit()
@@ -29,7 +38,7 @@ struct CurrentWeatherRow: View {
                     ProgressView()
                 }
                 .frame(width: 30, height: 30)
-            }
+            }*/
             
             Text("\(viewModel.temperature)°")
                 .pixelFont(size: 18, bold: true)

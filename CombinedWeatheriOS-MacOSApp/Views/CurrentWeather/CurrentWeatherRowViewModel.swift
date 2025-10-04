@@ -30,6 +30,11 @@ struct CurrentWeatherRowViewModel: Identifiable {
         return URL(string: "https:\(hourItem.condition.icon)")
     }
     
+    var iconCode: Int {
+        return hourItem.condition.code
+    }
+    
+    
     init(forecast: ForecastDay, hour: Hour) {
         self.forecastItem = forecast
         self.hourItem = hour

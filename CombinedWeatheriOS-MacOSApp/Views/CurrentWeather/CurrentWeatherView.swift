@@ -91,10 +91,15 @@ struct CurrentWeatherView: View {
             
             Spacer()
             
-            Image("Sun")
-                .resizable()
-                .interpolation(.none)
-                .frame(width: 180, height: 180)
+            if let icon = WeatherIcon(rawValue: weather.current.condition.code) {
+                Image(icon.imageName)
+                    .resizable()
+                    .interpolation(.none)
+                    .frame(width: 180, height: 180)
+            } else {
+                Image("icon_default") // fallback
+            }
+                
         }
     }
     
